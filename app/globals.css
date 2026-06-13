@@ -1,26 +1,172 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: "Gellix";
+  src: url("/fonts/Gellix-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gellix";
+  src: url("/fonts/Gellix-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gellix";
+  src: url("/fonts/Gellix-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Teodor";
+  src: url("/fonts/Teodor-LightItalic.woff2") format("woff2");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("/fonts/Jost-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-gellix: "Gellix", sans-serif;
+  --font-teodor: "Teodor", serif;
+
+  --color-cream: #fcfaf5;
+  --color-cream-warm: #f3eddd;
+  --color-dark: #282828;
+  --color-dark-mid: #323232;
+  --color-body: #333333;
+  --color-muted: #6f6f6f;
+  --color-placeholder: #9b9b9b;
+  --color-border: #e7e7e7;
+  --color-sage-500: #939f9b;
+  --color-sage-400: #a5aeab;
+  --color-sage-300: #b9bfbc;
+
+  --ease-smooth: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-page: cubic-bezier(0.625, 0.05, 0, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --cream: #fcfaf5;
+  --cream-warm: #f3eddd;
+  --dark: #282828;
+  --dark-mid: #323232;
+  --text-body: #333333;
+  --text-muted: #6f6f6f;
+  --text-placeholder: #9b9b9b;
+  --border: #e7e7e7;
+  --sage-500: #939f9b;
+  --sage-400: #a5aeab;
+  --sage-300: #b9bfbc;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --ease-smooth: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-page: cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+html {
+  font-size: 13.545px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--cream);
+  color: var(--text-body);
+  font-family: "Gellix", sans-serif;
+  font-weight: 400;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Gellix", sans-serif;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--dark);
+}
+
+em {
+  font-family: "Teodor", serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* Smooth scroll (Lenis adds these) */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Section reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Underline input style */
+.field-underline {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75em 0;
+  font-family: inherit;
+  font-size: 1em;
+  color: var(--dark);
+  outline: none;
+  width: 100%;
+  transition: border-bottom-color 0.3s var(--ease-smooth);
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+.field-underline:focus {
+  border-bottom-color: var(--dark);
+}
+
+.field-underline::placeholder {
+  color: var(--text-placeholder);
+}
+
+select.field-underline {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236f6f6f' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 1.5em;
+  cursor: pointer;
+}
+
+/* Page transition overlay */
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: var(--cream);
+  pointer-events: none;
 }

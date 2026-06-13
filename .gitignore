@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.gstack/
+.claude/
+architecture.md
+design-system.md
+components-inventory.md
+sitemap.md
+mimaratolye.mp4
