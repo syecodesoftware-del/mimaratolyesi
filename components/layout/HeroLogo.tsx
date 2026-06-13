@@ -1,44 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { useScroll, useMotionValue, motion } from "framer-motion";
+import { useMotionValue, motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 const SCROLL_END = 360;
 const NAV_H = 54;
 const ROOT_PX = 13.545;
 const FONT_END = 1.5 * ROOT_PX;
+const endLineH = FONT_END * 1.2;
+const endY = NAV_H / 2 - endLineH / 2;
 
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-const endLineH = FONT_END * 1.2;
-const endY = NAV_H / 2 - endLineH / 2;
-
 export default function HeroLogo() {
-  const { scrollY } = useScroll();
-
-  // Refs for start values — no state, no re-render, no MotionValue recreation
   const startFontRef = useRef(10.5 * ROOT_PX);
   const startYRef = useRef(320);
 
-  // Direct MotionValues — stable across renders
+  // Only y and scale are animated — no font-size change during scroll (avoids reflow)
   const yMV = useMotionValue(320);
-  const fontSizeMV = useMotionValue(10.5 * ROOT_PX);
+  const scaleMV = useMotionValue(1);
   const colorMV = useMotionValue("rgb(252,250,245)");
-  const spacingMV = useMotionValue("0px");
+  const fontSizeMV = useMotionValue(10.5 * ROOT_PX); // set once on mount, never again
 
-  const applyScroll = useRef((val: number) => {
-    const p = Math.min(1, Math.max(0, val / SCROLL_END));
+  const rafRef = useRef<number>(0);
+  const lastScrollRef = useRef(-1);
+
+  const applyScroll = (scrollVal: number) => {
+    if (scrollVal === lastScrollRef.current) return;
+    lastScrollRef.current = scrollVal;
+
+    const p = Math.min(1, Math.max(0, scrollVal / SCROLL_END));
     yMV.set(lerp(startYRef.current, endY, p));
-    fontSizeMV.set(lerp(startFontRef.current, FONT_END, p));
+    // scale instead of font-size — GPU compositor, no layout reflow
+    scaleMV.set(lerp(1, FONT_END / startFontRef.current, p));
     const r = Math.round(lerp(252, 40, p));
     const g = Math.round(lerp(250, 40, p));
     const b = Math.round(lerp(245, 40, p));
     colorMV.set(`rgb(${r},${g},${b})`);
-    spacingMV.set(`${lerp(0, 1, p).toFixed(2)}px`);
-  });
+  };
 
   useEffect(() => {
     const recalc = () => {
@@ -46,18 +48,26 @@ export default function HeroLogo() {
       const font =
         vw < 640 ? vw * 0.09 : vw < 1024 ? vw * 0.082 : 10.5 * ROOT_PX;
       startFontRef.current = font;
-      startYRef.current = window.innerHeight * 0.58 - font * 1.2 / 2;
-      applyScroll.current(window.scrollY);
+      startYRef.current = window.innerHeight * 0.58 - (font * 1.2) / 2;
+      fontSizeMV.set(font); // set once — never touched during scroll
+      applyScroll(window.scrollY);
     };
 
     recalc();
     window.addEventListener("resize", recalc);
-    return () => window.removeEventListener("resize", recalc);
-  }, []);
 
-  useEffect(() => {
-    return scrollY.on("change", (val) => applyScroll.current(val));
-  }, [scrollY]);
+    // rAF loop: fires every frame regardless of scroll event throttling (fixes iOS momentum)
+    const tick = () => {
+      applyScroll(window.scrollY);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener("resize", recalc);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -67,6 +77,8 @@ export default function HeroLogo() {
         left: "50%",
         x: "-50%",
         y: yMV,
+        scale: scaleMV,
+        transformOrigin: "center top",
         zIndex: 55,
         pointerEvents: "none",
       }}
@@ -76,7 +88,6 @@ export default function HeroLogo() {
           style={{
             fontSize: fontSizeMV,
             color: colorMV,
-            letterSpacing: spacingMV,
             fontWeight: 400,
             whiteSpace: "nowrap",
             fontFamily: '"Jost", sans-serif',
