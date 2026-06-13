@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useMotionValue, motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 const SCROLL_END = 360;
@@ -16,78 +15,68 @@ function lerp(a: number, b: number, t: number) {
 }
 
 export default function HeroLogo() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const spanRef = useRef<HTMLSpanElement>(null);
   const startFontRef = useRef(10.5 * ROOT_PX);
   const startYRef = useRef(320);
 
-  // Only y and scale are animated — no font-size change during scroll (avoids reflow)
-  const yMV = useMotionValue(320);
-  const scaleMV = useMotionValue(1);
-  const colorMV = useMotionValue("rgb(252,250,245)");
-  const fontSizeMV = useMotionValue(10.5 * ROOT_PX); // set once on mount, never again
-
-  const rafRef = useRef<number>(0);
-  const lastScrollRef = useRef(-1);
-
-  const applyScroll = (scrollVal: number) => {
-    if (scrollVal === lastScrollRef.current) return;
-    lastScrollRef.current = scrollVal;
-
-    const p = Math.min(1, Math.max(0, scrollVal / SCROLL_END));
-    yMV.set(lerp(startYRef.current, endY, p));
-    // scale instead of font-size — GPU compositor, no layout reflow
-    scaleMV.set(lerp(1, FONT_END / startFontRef.current, p));
-    const r = Math.round(lerp(252, 40, p));
-    const g = Math.round(lerp(250, 40, p));
-    const b = Math.round(lerp(245, 40, p));
-    colorMV.set(`rgb(${r},${g},${b})`);
-  };
-
   useEffect(() => {
+    const wrap = wrapRef.current;
+    const span = spanRef.current;
+    if (!wrap || !span) return;
+
     const recalc = () => {
       const vw = window.innerWidth;
       const font =
         vw < 640 ? vw * 0.09 : vw < 1024 ? vw * 0.082 : 10.5 * ROOT_PX;
       startFontRef.current = font;
       startYRef.current = window.innerHeight * 0.58 - (font * 1.2) / 2;
-      fontSizeMV.set(font); // set once — never touched during scroll
-      applyScroll(window.scrollY);
+      span.style.fontSize = `${font}px`;
     };
 
     recalc();
-    window.addEventListener("resize", recalc);
 
-    // rAF loop: fires every frame regardless of scroll event throttling (fixes iOS momentum)
+    // rAF loop — no scroll event dependency, no frame skipping
+    let rafId: number;
     const tick = () => {
-      applyScroll(window.scrollY);
-      rafRef.current = requestAnimationFrame(tick);
+      const p = Math.min(1, Math.max(0, window.scrollY / SCROLL_END));
+      const y = lerp(startYRef.current, endY, p);
+      const scale = lerp(1, FONT_END / startFontRef.current, p);
+      const r = Math.round(lerp(252, 40, p));
+      const g = Math.round(lerp(250, 40, p));
+      const b = Math.round(lerp(245, 40, p));
+      wrap.style.transform = `translateX(-50%) translateY(${y}px) scale(${scale})`;
+      span.style.color = `rgb(${r},${g},${b})`;
+      rafId = requestAnimationFrame(tick);
     };
-    rafRef.current = requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
 
+    window.addEventListener("resize", recalc);
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("resize", recalc);
-      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
-    <motion.div
+    <div
+      ref={wrapRef}
       style={{
         position: "fixed",
         top: 0,
         left: "50%",
-        x: "-50%",
-        y: yMV,
-        scale: scaleMV,
-        transformOrigin: "center top",
         zIndex: 55,
         pointerEvents: "none",
+        transformOrigin: "center top",
+        willChange: "transform",
       }}
     >
       <Link href="/" style={{ pointerEvents: "auto", textDecoration: "none" }}>
-        <motion.span
+        <span
+          ref={spanRef}
           style={{
-            fontSize: fontSizeMV,
-            color: colorMV,
+            fontSize: `${10.5 * ROOT_PX}px`,
+            color: "rgb(252,250,245)",
             fontWeight: 400,
             whiteSpace: "nowrap",
             fontFamily: '"Jost", sans-serif',
@@ -96,8 +85,8 @@ export default function HeroLogo() {
           }}
         >
           Mimar & Atölyesi
-        </motion.span>
+        </span>
       </Link>
-    </motion.div>
+    </div>
   );
 }
