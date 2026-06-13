@@ -176,3 +176,24 @@ select.field-underline {
   background-color: var(--cream);
   pointer-events: none;
 }
+
+/* Hero logo: CSS scroll-driven animation (compositor thread, zero lag) */
+@keyframes hero-logo-scroll {
+  from {
+    transform: translateX(-50%) translateY(var(--hl-y0, 320px)) scale(1);
+  }
+  to {
+    transform: translateX(-50%) translateY(var(--hl-y1, 14.81px)) scale(var(--hl-s1, 0.143));
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .hl-driven {
+    animation-name: hero-logo-scroll;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root);
+    animation-range: 0px 360px;
+  }
+}
