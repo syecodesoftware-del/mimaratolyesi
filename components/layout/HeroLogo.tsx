@@ -34,27 +34,27 @@ export default function HeroLogo() {
       span.style.fontSize = `${font}px`;
     };
 
-    recalc();
-
-    // rAF loop — no scroll event dependency, no frame skipping
-    let rafId: number;
-    const tick = () => {
+    const apply = () => {
       const p = Math.min(1, Math.max(0, window.scrollY / SCROLL_END));
       const y = lerp(startYRef.current, endY, p);
-      const scale = lerp(1, FONT_END / startFontRef.current, p);
+      const sc = lerp(1, FONT_END / startFontRef.current, p);
       const r = Math.round(lerp(252, 40, p));
       const g = Math.round(lerp(250, 40, p));
       const b = Math.round(lerp(245, 40, p));
-      wrap.style.transform = `translateX(-50%) translateY(${y}px) scale(${scale})`;
+      wrap.style.transform = `translateX(-50%) translateY(${y}px) scale(${sc})`;
       span.style.color = `rgb(${r},${g},${b})`;
-      rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
 
-    window.addEventListener("resize", recalc);
+    recalc();
+    apply();
+
+    // scroll event fires when scrollY actually changes — correct on iOS/Android
+    // passive: true lets the browser handle momentum scroll on compositor thread
+    window.addEventListener("scroll", apply, { passive: true });
+    window.addEventListener("resize", () => { recalc(); apply(); });
+
     return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("resize", recalc);
+      window.removeEventListener("scroll", apply);
     };
   }, []);
 
