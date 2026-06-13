@@ -11,6 +11,10 @@ export default function LenisProvider({
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    // Disable Lenis on touch devices — native momentum scroll is better on mobile
+    // and prevents Framer Motion useScroll from getting confused
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
