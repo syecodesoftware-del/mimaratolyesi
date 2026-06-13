@@ -37,7 +37,7 @@ export default function CTASection({
         transition={{ duration: 0.8, ease: [0.165, 0.84, 0.44, 1] }}
       >
         <h2
-          className="text-[2.8em] font-medium leading-[1.15]"
+          className="text-[2em] sm:text-[2.8em] font-medium leading-[1.15]"
           style={{ color: textColor }}
           dangerouslySetInnerHTML={{ __html: heading }}
         />

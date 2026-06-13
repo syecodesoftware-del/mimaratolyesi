@@ -20,7 +20,7 @@ export default function ProjectsPage() {
         <div className="max-w-[75em] mx-auto">
           <SectionLabel>Projelerimiz</SectionLabel>
           <h1
-            className="text-[3.2em] font-medium leading-[1.1] max-w-[18em]"
+            className="text-[2em] sm:text-[2.6em] lg:text-[3.2em] font-medium leading-[1.1] max-w-[18em]"
             style={{ color: "var(--dark)" }}
           >
             Her arazi, <em>özgün</em> bir hikaye.

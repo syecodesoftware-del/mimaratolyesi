@@ -30,7 +30,7 @@ export default function QuoteSection({
         transition={{ duration: 0.8, ease: [0.165, 0.84, 0.44, 1] }}
       >
         <blockquote
-          className="text-[2.2em] leading-[1.35] font-light mb-[1.5em]"
+          className="text-[1.5em] sm:text-[2.2em] leading-[1.35] font-light mb-[1.5em]"
           style={{
             fontFamily: "var(--font-teodor, 'Playfair Display', serif)",
             fontStyle: "italic",

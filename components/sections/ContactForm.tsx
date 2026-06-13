@@ -64,7 +64,7 @@ export default function ContactForm() {
         >
           <SectionLabel>İletişim</SectionLabel>
           <h2
-            className="text-[2.4em] font-medium leading-tight mb-[1em]"
+            className="text-[1.8em] sm:text-[2.4em] font-medium leading-tight mb-[1em]"
             style={{ color: "var(--dark)" }}
           >
             Projenizi <em>konuşalım.</em>
@@ -113,7 +113,7 @@ export default function ContactForm() {
           viewport={{ once: true }}
           transition={{ delay: 0.15, duration: 0.6, ease: [0.165, 0.84, 0.44, 1] }}
         >
-          <div className="grid grid-cols-2 gap-[2em]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-[2em]">
             <div className="flex flex-col gap-[0.5em]">
               <label
                 className="text-[0.75em] font-medium tracking-[1px] uppercase"

@@ -51,20 +51,20 @@ export default async function PortfolioPage({ params }: Props) {
           style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%)" }}
         />
         <div className="absolute bottom-[3em] left-[2em] right-[2em]">
-          <div className="flex items-end justify-between max-w-[75em] mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between max-w-[75em] mx-auto gap-[1em]">
             <div>
               <Tag variant="dark" className="mb-[1em]">
                 {statusLabels[project.status]}
               </Tag>
               <h1
-                className="text-[3em] font-medium leading-tight"
+                className="text-[2em] sm:text-[3em] font-medium leading-tight"
                 style={{ color: "var(--cream)" }}
               >
                 {project.title}
               </h1>
             </div>
             <div
-              className="flex items-center gap-[2em] text-[0.9em] font-medium"
+              className="flex items-center gap-[1.5em] text-[0.85em] sm:text-[0.9em] font-medium"
               style={{ color: "var(--cream)" }}
             >
               <span>{project.beds} Yatak</span>

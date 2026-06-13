@@ -55,7 +55,7 @@ export default function NavMenuOverlay() {
                 >
                   <Link
                     href={link.href}
-                    className="block text-[2.5em] font-medium leading-tight"
+                    className="block text-[2em] sm:text-[2.5em] font-medium leading-tight"
                     style={{ color: "var(--cream)" }}
                     onClick={close}
                   >

@@ -20,11 +20,11 @@ export default function TestimonialsSection() {
       style={{ backgroundColor: "var(--cream)" }}
     >
       <div className="max-w-[75em] mx-auto">
-        <div className="flex items-center justify-between mb-[4em]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-[4em] gap-[1.5em]">
           <div>
             <SectionLabel>Müşteri Görüşleri</SectionLabel>
             <h2
-              className="text-[2.4em] font-medium leading-tight"
+              className="text-[1.8em] sm:text-[2.4em] font-medium leading-tight"
               style={{ color: "var(--dark)" }}
             >
               Müşterilerimiz <em>ne diyor?</em>
@@ -77,7 +77,7 @@ export default function TestimonialsSection() {
             className="max-w-[50em]"
           >
             <blockquote
-              className="text-[1.8em] leading-[1.4] font-light mb-[1.5em]"
+              className="text-[1.3em] sm:text-[1.8em] leading-[1.4] font-light mb-[1.5em]"
               style={{
                 fontFamily: "var(--font-teodor, 'Playfair Display', serif)",
                 fontStyle: "italic",

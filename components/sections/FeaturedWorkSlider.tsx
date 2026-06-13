@@ -51,7 +51,7 @@ export default function FeaturedWorkSlider() {
           {/* Header */}
           <div className="flex items-center justify-between mb-[2.5em]">
             <h2
-              className="text-[2.5em] font-medium leading-tight"
+              className="text-[1.8em] sm:text-[2.5em] font-medium leading-tight"
               style={{ color: "var(--dark)" }}
             >
               Son <em>Projelerimiz</em>
@@ -105,7 +105,7 @@ export default function FeaturedWorkSlider() {
             {projects.map((project, i) => (
               <motion.div
                 key={project.slug}
-                className="shrink-0 w-[320px]"
+                className="shrink-0 w-[80vw] sm:w-[320px]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{

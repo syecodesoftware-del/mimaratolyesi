@@ -81,6 +81,12 @@ html {
   font-size: 13.545px;
 }
 
+@media (max-width: 640px) {
+  html {
+    font-size: 12px;
+  }
+}
+
 body {
   background-color: var(--cream);
   color: var(--text-body);
